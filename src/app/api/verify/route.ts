@@ -1,38 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
-import bcrypt from "bcryptjs";
+import { supabase, supabaseAuth } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
-  const { slug, password } = await req.json();
+  const { slug, email, otp } = await req.json();
 
-  if (!slug || !password) {
-    return NextResponse.json({ error: "Missing slug or password" }, { status: 400 });
+  if (!slug || !email || !otp) {
+    return NextResponse.json(
+      { error: "Slug, email, and OTP code are required" },
+      { status: 400 }
+    );
   }
 
-  const { data, error } = await supabase
+  // Look up the link
+  const { data: link, error: linkError } = await supabase
     .from("client_links")
     .select("*")
     .eq("slug", slug)
-    .eq("is_active", true)
     .single();
 
-  if (error || !data) {
-    return NextResponse.json({ error: "Link not found" }, { status: 404 });
+  if (linkError || !link) {
+    return NextResponse.json({ error: "Proposal not found" }, { status: 404 });
   }
 
-  const valid = await bcrypt.compare(password, data.password_hash);
-  if (!valid) {
-    return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+  if (!link.is_active) {
+    return NextResponse.json(
+      { error: "This proposal has been deactivated" },
+      { status: 403 }
+    );
+  }
+
+  // Verify email matches
+  if (link.client_email?.toLowerCase() !== email.toLowerCase().trim()) {
+    return NextResponse.json(
+      { error: "Email does not match" },
+      { status: 401 }
+    );
+  }
+
+  // Verify OTP via Supabase Auth
+  const { error: otpError } = await supabaseAuth.auth.verifyOtp({
+    email: email.toLowerCase().trim(),
+    token: otp,
+    type: "email",
+  });
+
+  if (otpError) {
+    console.error("OTP verify error:", otpError);
+    return NextResponse.json(
+      { error: "Invalid or expired verification code" },
+      { status: 401 }
+    );
   }
 
   // Log access
   await supabase.from("link_access_logs").insert({
-    link_id: data.id,
+    link_id: link.id,
     ip_address: req.headers.get("x-forwarded-for") || "unknown",
   });
 
   return NextResponse.json({
-    client_name: data.client_name,
-    config: data.config,
+    client_name: link.client_name,
+    config: link.config,
   });
 }
