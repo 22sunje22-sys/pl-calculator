@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 interface Link {
   id: string;
   client_name: string;
+  client_email: string;
   slug: string;
   config: { events: number; ticketsPerEvent: number; avgTicketPrice: number };
   created_at: string;
@@ -44,7 +45,7 @@ export default function LinkManager() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500 text-sm">
-          No client links created yet. Use the calculator above and click
+          No client proposals created yet. Use the calculator above and click
           &quot;Generate Client Link&quot; to get started.
         </p>
       </div>
@@ -57,6 +58,7 @@ export default function LinkManager() {
         <thead>
           <tr className="text-gray-400 text-xs uppercase">
             <th className="text-left py-3 px-4">Client</th>
+            <th className="text-left py-3 px-4">Email</th>
             <th className="text-left py-3 px-4">Link</th>
             <th className="text-center py-3 px-4">Events</th>
             <th className="text-center py-3 px-4">Tickets</th>
@@ -71,6 +73,9 @@ export default function LinkManager() {
             <tr key={link.id} className="border-t border-[#1e293b]">
               <td className="py-3 px-4 text-white font-medium">
                 {link.client_name}
+              </td>
+              <td className="py-3 px-4 text-gray-400 text-xs">
+                {link.client_email}
               </td>
               <td className="py-3 px-4">
                 <button
