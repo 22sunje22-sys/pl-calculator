@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
 
 export async function GET() {
   const { data, error } = await supabase
     .from("client_links")
-    .select("id, client_name, slug, config, created_at, is_active")
+    .select("id, client_name, client_email, slug, config, created_at, is_active")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -17,19 +16,24 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { client_name, password, config } = body;
+  const { client_name, client_email, config } = body;
 
-  if (!client_name || !password || !config) {
+  if (!client_name || !client_email || !config) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   const slug = nanoid(10);
-  const password_hash = await bcrypt.hash(password, 10);
 
   const { data, error } = await supabase
     .from("client_links")
-    .insert({ client_name, slug, password_hash, config })
-    .select("id, client_name, slug, config, created_at, is_active")
+    .insert({
+      client_name,
+      client_email: client_email.toLowerCase().trim(),
+      slug,
+      password_hash: "otp-auth",
+      config,
+    })
+    .select("id, client_name, client_email, slug, config, created_at, is_active")
     .single();
 
   if (error) {
