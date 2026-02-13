@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { logActivity } from "@/lib/activity";
 import { nanoid } from "nanoid";
 
 export async function GET() {
@@ -40,6 +41,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  // Log proposal creation
+  await logActivity(slug, "proposal_created", {
+    client_name,
+    client_email: client_email.toLowerCase().trim(),
+    config,
+  });
+
   return NextResponse.json(data, { status: 201 });
 }
 
@@ -51,6 +59,13 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Missing id" }, { status: 400 });
   }
 
+  // Get the link info for logging
+  const { data: link } = await supabase
+    .from("client_links")
+    .select("slug, client_name")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase
     .from("client_links")
     .update({ is_active: false })
@@ -58,6 +73,12 @@ export async function DELETE(req: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (link) {
+    await logActivity(link.slug, "proposal_deactivated", {
+      client_name: link.client_name,
+    });
   }
 
   return NextResponse.json({ success: true });

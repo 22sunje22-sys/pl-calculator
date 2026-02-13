@@ -60,20 +60,20 @@ export default function CreateLinkModal({
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#111827] rounded-xl border border-[#1e293b] p-6 w-full max-w-md">
+      <div className="bg-[#0f1d32] rounded-2xl border border-[#1a2d4a] p-6 w-full max-w-md shadow-2xl shadow-black/40">
         {!createdSlug ? (
           <>
             <h3 className="text-lg font-bold text-white mb-4">
               Generate Client Proposal
             </h3>
-            <p className="text-sm text-gray-400 mb-6">
+            <p className="text-sm text-[#667a8a] mb-6">
               Save this calculator configuration and send a personalized
               proposal link to your client. They&apos;ll verify access via email OTP.
             </p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-[#667a8a] mb-1">
                   Client / Company Name
                 </label>
                 <input
@@ -81,11 +81,11 @@ export default function CreateLinkModal({
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="e.g. Dubai Events Corp"
-                  className="w-full bg-[#0d1117] border border-[#1e293b] rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-[#081220] border border-[#1a2d4a] rounded-lg px-4 py-2.5 text-white placeholder-[#3a4f66] focus:outline-none focus:border-[#79E2FF] focus:ring-1 focus:ring-[#79E2FF]/30 transition"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-[#667a8a] mb-1">
                   Client Email
                 </label>
                 <input
@@ -93,18 +93,18 @@ export default function CreateLinkModal({
                   value={clientEmail}
                   onChange={(e) => setClientEmail(e.target.value)}
                   placeholder="client@company.com"
-                  className="w-full bg-[#0d1117] border border-[#1e293b] rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-[#081220] border border-[#1a2d4a] rounded-lg px-4 py-2.5 text-white placeholder-[#3a4f66] focus:outline-none focus:border-[#79E2FF] focus:ring-1 focus:ring-[#79E2FF]/30 transition"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-[#4a6070] mt-1">
                   A one-time code will be sent here for verification
                 </p>
               </div>
 
-              <div className="bg-[#0d1117] rounded-lg p-3 border border-[#1e293b]">
-                <p className="text-xs text-gray-400 mb-2">
+              <div className="bg-[#081220] rounded-lg p-3 border border-[#1a2d4a]">
+                <p className="text-xs text-[#667a8a] mb-2">
                   Configuration snapshot:
                 </p>
-                <div className="text-xs text-gray-300 space-y-1">
+                <div className="text-xs text-[#8a9bae] space-y-1">
                   <p>Events/Year: {config.events}</p>
                   <p>Tickets/Event: {config.ticketsPerEvent.toLocaleString()}</p>
                   <p>Avg Price: {config.avgTicketPrice} AED</p>
@@ -117,14 +117,14 @@ export default function CreateLinkModal({
             <div className="flex gap-3 mt-6">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2.5 border border-[#1e293b] rounded-lg text-gray-400 hover:text-white hover:border-gray-600 transition"
+                className="flex-1 px-4 py-2.5 border border-[#1a2d4a] rounded-lg text-[#667a8a] hover:text-white hover:border-[#4a6070] transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreate}
                 disabled={!clientName || !clientEmail || loading}
-                className="flex-1 px-4 py-2.5 bg-indigo-600 rounded-lg text-white font-medium hover:bg-indigo-500 transition disabled:opacity-40"
+                className="flex-1 px-4 py-2.5 bg-[#00A5D3] rounded-lg text-white font-medium hover:bg-[#79E2FF] hover:text-[#0a1628] transition disabled:opacity-40"
               >
                 {loading ? "Creating..." : "Create Proposal"}
               </button>
@@ -133,33 +133,33 @@ export default function CreateLinkModal({
         ) : (
           <>
             <div className="text-center">
-              <div className="w-12 h-12 bg-green-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-green-400 text-2xl">&#10003;</span>
+              <div className="w-12 h-12 bg-[#C7F8BA]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-[#C7F8BA] text-2xl">&#10003;</span>
               </div>
               <h3 className="text-lg font-bold text-white mb-2">
                 Proposal Created!
               </h3>
-              <p className="text-sm text-gray-400 mb-4">
+              <p className="text-sm text-[#667a8a] mb-4">
                 Share this link with{" "}
-                <span className="text-indigo-400">{clientName}</span>
+                <span className="text-[#79E2FF]">{clientName}</span>
               </p>
             </div>
 
-            <div className="bg-[#0d1117] rounded-lg p-3 border border-[#1e293b] mb-4">
-              <p className="text-xs text-gray-400 mb-1">Proposal Link:</p>
-              <p className="text-sm text-indigo-400 break-all font-mono">
+            <div className="bg-[#081220] rounded-lg p-3 border border-[#1a2d4a] mb-4">
+              <p className="text-xs text-[#667a8a] mb-1">Proposal Link:</p>
+              <p className="text-sm text-[#79E2FF] break-all font-mono">
                 {fullUrl}
               </p>
             </div>
 
-            <div className="bg-[#0d1117] rounded-lg p-3 border border-[#1e293b] mb-4">
-              <p className="text-xs text-gray-400 mb-1">Client Email:</p>
+            <div className="bg-[#081220] rounded-lg p-3 border border-[#1a2d4a] mb-4">
+              <p className="text-xs text-[#667a8a] mb-1">Client Email:</p>
               <p className="text-sm text-white font-mono">
                 {clientEmail.toLowerCase().trim()}
               </p>
             </div>
 
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-[#4a6070] mb-4">
               When the client opens the link, they will enter their email and
               receive a one-time verification code to access the calculator.
             </p>
@@ -168,14 +168,14 @@ export default function CreateLinkModal({
               onClick={() => {
                 navigator.clipboard.writeText(fullUrl);
               }}
-              className="w-full px-4 py-2.5 bg-indigo-600 rounded-lg text-white font-medium hover:bg-indigo-500 transition mb-3"
+              className="w-full px-4 py-2.5 bg-[#00A5D3] rounded-lg text-white font-medium hover:bg-[#79E2FF] hover:text-[#0a1628] transition mb-3"
             >
               Copy Link
             </button>
 
             <button
               onClick={onClose}
-              className="w-full px-4 py-2.5 border border-[#1e293b] rounded-lg text-gray-400 hover:text-white transition"
+              className="w-full px-4 py-2.5 border border-[#1a2d4a] rounded-lg text-[#667a8a] hover:text-white transition"
             >
               Close
             </button>

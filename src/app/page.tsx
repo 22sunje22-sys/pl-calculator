@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import Calculator from "@/components/Calculator";
 import CreateLinkModal from "@/components/CreateLinkModal";
 import LinkManager from "@/components/LinkManager";
+import ActivityLog from "@/components/ActivityLog";
 import AdminGate from "@/components/AdminGate";
 
 export default function AdminPage() {
@@ -13,9 +14,9 @@ export default function AdminPage() {
   const [tickets, setTickets] = useState(2500);
   const [price, setPrice] = useState(250);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [activeTab, setActiveTab] = useState<"calculator" | "links">(
-    "calculator"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "calculator" | "links" | "updates"
+  >("calculator");
 
   const handleAuth = useCallback((email: string) => {
     setAdminEmail(email);
@@ -31,56 +32,65 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a]">
+    <div className="min-h-screen bg-[#0a1628]">
       {/* Header */}
-      <header className="border-b border-[#1e293b] bg-[#111827]/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-[#1a2d4a] bg-[#0f1d32]/80 backdrop-blur-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl font-bold text-white">
-              Platinum<span className="text-indigo-400">list</span>
-            </span>
-            <span className="text-xs bg-indigo-900/50 text-indigo-300 px-2 py-0.5 rounded-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="Platinumlist" className="h-7" />
+            <span className="text-xs bg-[#00A5D3]/15 text-[#79E2FF] px-2.5 py-0.5 rounded-full font-medium border border-[#00A5D3]/20">
               Partner Calculator
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex bg-[#0d1117] rounded-lg border border-[#1e293b] p-0.5">
+            <div className="flex bg-[#081220] rounded-lg border border-[#1a2d4a] p-0.5">
               <button
                 onClick={() => setActiveTab("calculator")}
-                className={`px-4 py-1.5 rounded-md text-sm transition ${
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
                   activeTab === "calculator"
-                    ? "bg-indigo-600 text-white"
-                    : "text-gray-400 hover:text-white"
+                    ? "bg-[#00A5D3] text-white"
+                    : "text-[#667a8a] hover:text-white"
                 }`}
               >
                 Calculator
               </button>
               <button
                 onClick={() => setActiveTab("links")}
-                className={`px-4 py-1.5 rounded-md text-sm transition ${
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
                   activeTab === "links"
-                    ? "bg-indigo-600 text-white"
-                    : "text-gray-400 hover:text-white"
+                    ? "bg-[#00A5D3] text-white"
+                    : "text-[#667a8a] hover:text-white"
                 }`}
               >
                 Shared Links
+              </button>
+              <button
+                onClick={() => setActiveTab("updates")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
+                  activeTab === "updates"
+                    ? "bg-[#00A5D3] text-white"
+                    : "text-[#667a8a] hover:text-white"
+                }`}
+              >
+                Updates
               </button>
             </div>
             {activeTab === "calculator" && (
               <button
                 onClick={() => setShowModal(true)}
-                className="px-4 py-2 bg-indigo-600 rounded-lg text-white text-sm font-medium hover:bg-indigo-500 transition"
+                className="px-4 py-2 bg-[#00A5D3] rounded-lg text-white text-sm font-semibold hover:bg-[#79E2FF] hover:text-[#0a1628] transition-all"
               >
                 Generate Client Link
               </button>
             )}
-            <div className="flex items-center gap-2 ml-2 pl-2 border-l border-[#1e293b]">
-              <span className="text-xs text-gray-500 hidden sm:inline">
+            <div className="flex items-center gap-2 ml-2 pl-2 border-l border-[#1a2d4a]">
+              <span className="text-xs text-[#4a6070] hidden sm:inline">
                 {adminEmail}
               </span>
               <button
                 onClick={handleLogout}
-                className="text-xs text-gray-400 hover:text-red-400 transition px-2 py-1 rounded border border-[#1e293b] hover:border-red-900/50"
+                className="text-xs text-[#667a8a] hover:text-red-400 transition px-2 py-1 rounded border border-[#1a2d4a] hover:border-red-900/50"
               >
                 Logout
               </button>
@@ -100,13 +110,24 @@ export default function AdminPage() {
             onTicketsChange={setTickets}
             onPriceChange={setPrice}
           />
-        ) : (
-          <div className="bg-[#111827] rounded-xl border border-[#1e293b] p-6">
+        ) : activeTab === "links" ? (
+          <div className="bg-[#0f1d32] rounded-2xl border border-[#1a2d4a] p-6">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <span className="text-indigo-400">&#128279;</span> Shared Client
+              <span className="text-[#79E2FF]">&#128279;</span> Shared Client
               Links
             </h3>
             <LinkManager key={refreshKey} />
+          </div>
+        ) : (
+          <div className="bg-[#0f1d32] rounded-2xl border border-[#1a2d4a] p-6">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <span className="text-[#79E2FF]">↗</span> Client Activity
+            </h3>
+            <p className="text-sm text-[#667a8a] mb-6">
+              Track how clients interact with their proposals — who opened, what
+              they explored, and where they stopped.
+            </p>
+            <ActivityLog key={refreshKey} />
           </div>
         )}
       </main>

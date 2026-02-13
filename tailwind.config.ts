@@ -8,15 +8,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
       colors: {
         pl: {
-          bg: "#0a0e1a",
-          card: "#111827",
-          border: "#1e293b",
-          accent: "#6366f1",
-          green: "#22c55e",
-          yellow: "#eab308",
-          gold: "#f59e0b",
+          bg: "#0a1628",
+          card: "#0f1d32",
+          border: "#1a2d4a",
+          monday: "#79E2FF",
+          day: "#C7F8BA",
+          suede: "#00A5D3",
+          electro: "#221377",
+          dark: "#0a1628",
+          input: "#081220",
         },
       },
     },

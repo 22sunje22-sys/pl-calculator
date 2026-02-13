@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase, supabaseAuth } from "@/lib/supabase";
+import { logActivity } from "@/lib/activity";
 
 export async function POST(req: NextRequest) {
   const { slug, email, otp } = await req.json();
@@ -46,17 +47,32 @@ export async function POST(req: NextRequest) {
 
   if (otpError) {
     console.error("OTP verify error:", otpError);
+    await logActivity(slug, "otp_failed", {
+      client_name: link.client_name,
+      email: email.toLowerCase().trim(),
+      reason: otpError.message,
+    }, email);
     return NextResponse.json(
       { error: "Invalid or expired verification code" },
       { status: 401 }
     );
   }
 
-  // Log access
-  await supabase.from("link_access_logs").insert({
-    link_id: link.id,
-    ip_address: req.headers.get("x-forwarded-for") || "unknown",
-  });
+  // Log successful verification
+  await logActivity(slug, "otp_verified", {
+    client_name: link.client_name,
+    email: email.toLowerCase().trim(),
+  }, email);
+
+  // Also log in legacy access logs if table exists
+  try {
+    await supabase.from("link_access_logs").insert({
+      link_id: link.id,
+      ip_address: req.headers.get("x-forwarded-for") || "unknown",
+    });
+  } catch {
+    // table might not exist, ignore
+  }
 
   return NextResponse.json({
     client_name: link.client_name,

@@ -81,18 +81,17 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
-      <div className="bg-[#111827] rounded-xl border border-[#1e293b] p-8 w-full max-w-sm">
-        <div className="text-center mb-6">
-          <div className="mb-4">
-            <span className="text-2xl font-bold text-white">
-              Platinum<span className="text-indigo-400">list</span>
-            </span>
+    <div className="min-h-screen bg-[#0a1628] flex items-center justify-center p-4">
+      <div className="bg-[#0f1d32] rounded-2xl border border-[#1a2d4a] p-8 w-full max-w-sm shadow-2xl shadow-black/40">
+        <div className="text-center mb-8">
+          <div className="mb-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="Platinumlist" className="h-8 mx-auto" />
           </div>
-          <h1 className="text-lg font-bold text-white">
+          <h1 className="text-lg font-bold text-white tracking-tight">
             {step === "email" ? "Admin Login" : "Enter Verification Code"}
           </h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-[#667a8a] mt-2">
             {step === "email"
               ? "Sign in to manage partner proposals"
               : `We sent a 6-digit code to ${email}`}
@@ -112,7 +111,7 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@platinumlist.net"
-              className="w-full bg-[#0d1117] border border-[#1e293b] rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+              className="w-full bg-[#081220] border border-[#1a2d4a] rounded-lg px-4 py-3 text-white placeholder-[#3a4f66] focus:outline-none focus:border-[#79E2FF] focus:ring-1 focus:ring-[#79E2FF]/30 transition"
               autoFocus
             />
 
@@ -121,7 +120,7 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
             <button
               type="submit"
               disabled={!email.trim() || loading}
-              className="w-full px-4 py-3 bg-indigo-600 rounded-lg text-white font-medium hover:bg-indigo-500 transition disabled:opacity-40"
+              className="w-full px-4 py-3 bg-[#00A5D3] rounded-lg text-white font-semibold hover:bg-[#79E2FF] hover:text-[#0a1628] transition-all disabled:opacity-40"
             >
               {loading ? "Sending..." : "Send Verification Code"}
             </button>
@@ -139,7 +138,7 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
               placeholder="000000"
-              className="w-full bg-[#0d1117] border border-[#1e293b] rounded-lg px-4 py-3 text-white text-center text-2xl tracking-[0.5em] placeholder-gray-600 focus:outline-none focus:border-indigo-500 font-mono"
+              className="w-full bg-[#081220] border border-[#1a2d4a] rounded-lg px-4 py-3 text-[#C7F8BA] text-center text-2xl tracking-[0.5em] placeholder-[#3a4f66] focus:outline-none focus:border-[#79E2FF] focus:ring-1 focus:ring-[#79E2FF]/30 font-mono transition"
               maxLength={6}
               autoFocus
             />
@@ -149,7 +148,7 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
             <button
               type="submit"
               disabled={otp.length < 6 || loading}
-              className="w-full px-4 py-3 bg-indigo-600 rounded-lg text-white font-medium hover:bg-indigo-500 transition disabled:opacity-40"
+              className="w-full px-4 py-3 bg-[#00A5D3] rounded-lg text-white font-semibold hover:bg-[#79E2FF] hover:text-[#0a1628] transition-all disabled:opacity-40"
             >
               {loading ? "Verifying..." : "Sign In"}
             </button>
@@ -162,7 +161,7 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
                   setOtp("");
                   setError("");
                 }}
-                className="text-gray-400 hover:text-white transition"
+                className="text-[#667a8a] hover:text-white transition"
               >
                 Change email
               </button>
@@ -170,7 +169,7 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
                 type="button"
                 onClick={handleSendOTP}
                 disabled={loading}
-                className="text-indigo-400 hover:text-indigo-300 transition disabled:opacity-40"
+                className="text-[#79E2FF] hover:text-[#C7F8BA] transition disabled:opacity-40"
               >
                 Resend code
               </button>
@@ -178,8 +177,8 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
           </form>
         )}
 
-        <p className="text-xs text-gray-600 text-center mt-6">
-          Partner Calculator Admin Panel
+        <p className="text-xs text-[#2a3d5a] text-center mt-8">
+          Platinumlist for Organisers
         </p>
       </div>
     </div>

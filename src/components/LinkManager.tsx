@@ -37,14 +37,14 @@ export default function LinkManager() {
 
   if (loading) {
     return (
-      <div className="text-center py-8 text-gray-500">Loading links...</div>
+      <div className="text-center py-8 text-[#4a6070]">Loading links...</div>
     );
   }
 
   if (links.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 text-sm">
+        <p className="text-[#4a6070] text-sm">
           No client proposals created yet. Use the calculator above and click
           &quot;Generate Client Link&quot; to get started.
         </p>
@@ -56,7 +56,7 @@ export default function LinkManager() {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-gray-400 text-xs uppercase">
+          <tr className="text-[#667a8a] text-xs uppercase">
             <th className="text-left py-3 px-4">Client</th>
             <th className="text-left py-3 px-4">Email</th>
             <th className="text-left py-3 px-4">Link</th>
@@ -70,11 +70,11 @@ export default function LinkManager() {
         </thead>
         <tbody>
           {links.map((link) => (
-            <tr key={link.id} className="border-t border-[#1e293b]">
+            <tr key={link.id} className="border-t border-[#1a2d4a]">
               <td className="py-3 px-4 text-white font-medium">
                 {link.client_name}
               </td>
-              <td className="py-3 px-4 text-gray-400 text-xs">
+              <td className="py-3 px-4 text-[#667a8a] text-xs">
                 {link.client_email}
               </td>
               <td className="py-3 px-4">
@@ -84,29 +84,29 @@ export default function LinkManager() {
                       `${baseUrl}/c/${link.slug}`
                     )
                   }
-                  className="text-indigo-400 hover:text-indigo-300 text-xs font-mono truncate max-w-[180px] block"
+                  className="text-[#79E2FF] hover:text-[#C7F8BA] text-xs font-mono truncate max-w-[180px] block transition"
                   title={`${baseUrl}/c/${link.slug}`}
                 >
                   /c/{link.slug}
                 </button>
               </td>
-              <td className="text-center py-3 px-4 text-gray-300">
+              <td className="text-center py-3 px-4 text-[#8a9bae]">
                 {link.config.events}
               </td>
-              <td className="text-center py-3 px-4 text-gray-300">
+              <td className="text-center py-3 px-4 text-[#8a9bae]">
                 {link.config.ticketsPerEvent.toLocaleString()}
               </td>
-              <td className="text-center py-3 px-4 text-gray-300">
+              <td className="text-center py-3 px-4 text-[#8a9bae]">
                 {link.config.avgTicketPrice} AED
               </td>
-              <td className="text-center py-3 px-4 text-gray-400 text-xs">
+              <td className="text-center py-3 px-4 text-[#667a8a] text-xs">
                 {new Date(link.created_at).toLocaleDateString()}
               </td>
               <td className="text-center py-3 px-4">
                 <span
                   className={`text-xs px-2 py-0.5 rounded ${
                     link.is_active
-                      ? "bg-green-900/40 text-green-400"
+                      ? "bg-[#C7F8BA]/10 text-[#C7F8BA]"
                       : "bg-red-900/40 text-red-400"
                   }`}
                 >
@@ -117,7 +117,7 @@ export default function LinkManager() {
                 {link.is_active && (
                   <button
                     onClick={() => handleDeactivate(link.id)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs text-red-400 hover:text-red-300 transition"
                   >
                     Deactivate
                   </button>
