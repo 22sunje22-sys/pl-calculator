@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase, supabaseAuth } from "@/lib/supabase";
 import { isAdminEmail } from "@/lib/admins";
+import { createAdminToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   const { email, otp } = await req.json();
@@ -30,14 +31,22 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Generate signed admin token
+  const adminToken = createAdminToken(email);
+
   // Log admin login
-  await supabase.from("link_access_logs").insert({
-    link_id: null,
-    ip_address: req.headers.get("x-forwarded-for") || "unknown",
-  });
+  try {
+    await supabase.from("link_access_logs").insert({
+      link_id: null,
+      ip_address: req.headers.get("x-forwarded-for") || "unknown",
+    });
+  } catch {
+    // ignore if table doesn't exist
+  }
 
   return NextResponse.json({
     success: true,
     email: email.toLowerCase().trim(),
+    token: adminToken,
   });
 }

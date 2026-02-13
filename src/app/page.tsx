@@ -9,6 +9,7 @@ import AdminGate from "@/components/AdminGate";
 
 export default function AdminPage() {
   const [adminEmail, setAdminEmail] = useState<string | null>(null);
+  const [adminToken, setAdminToken] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [events, setEvents] = useState(16);
   const [tickets, setTickets] = useState(2500);
@@ -18,16 +19,19 @@ export default function AdminPage() {
     "calculator" | "links" | "updates"
   >("calculator");
 
-  const handleAuth = useCallback((email: string) => {
+  const handleAuth = useCallback((email: string, token: string) => {
     setAdminEmail(email);
+    setAdminToken(token);
   }, []);
 
   const handleLogout = () => {
     sessionStorage.removeItem("pl_admin");
+    sessionStorage.removeItem("pl_admin_token");
     setAdminEmail(null);
+    setAdminToken(null);
   };
 
-  if (!adminEmail) {
+  if (!adminEmail || !adminToken) {
     return <AdminGate onAuthenticated={handleAuth} />;
   }
 
@@ -116,7 +120,7 @@ export default function AdminPage() {
               <span className="text-[#79E2FF]">&#128279;</span> Shared Client
               Links
             </h3>
-            <LinkManager key={refreshKey} />
+            <LinkManager key={refreshKey} token={adminToken} />
           </div>
         ) : (
           <div className="bg-[#0f1d32] rounded-2xl border border-[#1a2d4a] p-6">
@@ -127,7 +131,7 @@ export default function AdminPage() {
               Track how clients interact with their proposals — who opened, what
               they explored, and where they stopped.
             </p>
-            <ActivityLog key={refreshKey} />
+            <ActivityLog key={refreshKey} token={adminToken} />
           </div>
         )}
       </main>
@@ -135,6 +139,7 @@ export default function AdminPage() {
       {showModal && (
         <CreateLinkModal
           config={{ events, ticketsPerEvent: tickets, avgTicketPrice: price }}
+          token={adminToken}
           onClose={() => setShowModal(false)}
           onCreated={() => setRefreshKey((k) => k + 1)}
         />

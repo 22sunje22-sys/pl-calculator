@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { logActivity } from "@/lib/activity";
+import { getAdminFromRequest } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/admins";
 import { nanoid } from "nanoid";
 
-export async function GET() {
+const UNAUTHORIZED = NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+export async function GET(req: NextRequest) {
+  const admin = getAdminFromRequest(req);
+  if (!admin || !isAdminEmail(admin)) return UNAUTHORIZED;
+
   const { data, error } = await supabase
     .from("client_links")
     .select("id, client_name, client_email, slug, config, created_at, is_active")
@@ -16,6 +23,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const admin = getAdminFromRequest(req);
+  if (!admin || !isAdminEmail(admin)) return UNAUTHORIZED;
+
   const body = await req.json();
   const { client_name, client_email, config } = body;
 
@@ -52,6 +62,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const admin = getAdminFromRequest(req);
+  if (!admin || !isAdminEmail(admin)) return UNAUTHORIZED;
+
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
 

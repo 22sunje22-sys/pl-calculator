@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 interface AdminGateProps {
-  onAuthenticated: (email: string) => void;
+  onAuthenticated: (email: string, token: string) => void;
 }
 
 export default function AdminGate({ onAuthenticated }: AdminGateProps) {
@@ -15,9 +15,10 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
 
   // Check for existing session on mount
   useEffect(() => {
-    const saved = sessionStorage.getItem("pl_admin");
-    if (saved) {
-      onAuthenticated(saved);
+    const savedEmail = sessionStorage.getItem("pl_admin");
+    const savedToken = sessionStorage.getItem("pl_admin_token");
+    if (savedEmail && savedToken) {
+      onAuthenticated(savedEmail, savedToken);
     }
   }, [onAuthenticated]);
 
@@ -72,7 +73,8 @@ export default function AdminGate({ onAuthenticated }: AdminGateProps) {
         );
       }
       sessionStorage.setItem("pl_admin", data.email);
-      onAuthenticated(data.email);
+      sessionStorage.setItem("pl_admin_token", data.token);
+      onAuthenticated(data.email, data.token);
     } catch (err: any) {
       setError(err.message);
     } finally {

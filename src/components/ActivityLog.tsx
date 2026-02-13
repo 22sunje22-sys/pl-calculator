@@ -22,48 +22,58 @@ interface GroupedSession {
   sessionDuration: string | null;
 }
 
+interface ActivityLogProps {
+  token: string;
+}
+
 // Action icons and colors
 function actionIcon(action: string): { icon: string; color: string } {
   switch (action) {
     case "proposal_created":
-      return { icon: "✦", color: "text-[#79E2FF]" };
+      return { icon: "\u2726", color: "text-[#79E2FF]" };
     case "proposal_deactivated":
-      return { icon: "✕", color: "text-red-400" };
+      return { icon: "\u2715", color: "text-red-400" };
     case "otp_requested":
-      return { icon: "✉", color: "text-[#FFD666]" };
+      return { icon: "\u2709", color: "text-[#FFD666]" };
     case "otp_request_failed":
-      return { icon: "⚠", color: "text-red-400" };
+      return { icon: "\u26A0", color: "text-red-400" };
     case "otp_verified":
-      return { icon: "✓", color: "text-[#C7F8BA]" };
+      return { icon: "\u2713", color: "text-[#C7F8BA]" };
     case "otp_failed":
-      return { icon: "✕", color: "text-red-400" };
+      return { icon: "\u2715", color: "text-red-400" };
     case "opened_proposal":
-      return { icon: "👁", color: "text-[#79E2FF]" };
+      return { icon: "\uD83D\uDC41", color: "text-[#79E2FF]" };
     case "changed_events":
     case "changed_tickets":
     case "changed_price":
-      return { icon: "⟡", color: "text-[#FFD666]" };
+      return { icon: "\u27E1", color: "text-[#FFD666]" };
     case "session_ended":
-      return { icon: "◉", color: "text-[#667a8a]" };
+      return { icon: "\u25C9", color: "text-[#667a8a]" };
     default:
-      return { icon: "•", color: "text-[#667a8a]" };
+      return { icon: "\u2022", color: "text-[#667a8a]" };
   }
 }
 
-export default function ActivityLog() {
+export default function ActivityLog({ token }: ActivityLogProps) {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "opened" | "not_opened">("all");
 
   useEffect(() => {
-    fetch("/api/activity?limit=500")
-      .then((r) => r.json())
+    fetch("/api/activity?limit=500", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((r) => {
+        if (r.ok) return r.json();
+        return [];
+      })
       .then((data) => {
-        setActivities(data);
+        setActivities(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {

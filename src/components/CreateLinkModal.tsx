@@ -4,12 +4,14 @@ import { useState } from "react";
 
 interface CreateLinkModalProps {
   config: { events: number; ticketsPerEvent: number; avgTicketPrice: number };
+  token: string;
   onClose: () => void;
   onCreated: () => void;
 }
 
 export default function CreateLinkModal({
   config,
+  token,
   onClose,
   onCreated,
 }: CreateLinkModalProps) {
@@ -33,7 +35,10 @@ export default function CreateLinkModal({
     try {
       const res = await fetch("/api/links", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           client_name: clientName,
           client_email: clientEmail.trim(),

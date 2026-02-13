@@ -12,24 +12,41 @@ interface Link {
   is_active: boolean;
 }
 
-export default function LinkManager() {
+interface LinkManagerProps {
+  token: string;
+}
+
+export default function LinkManager({ token }: LinkManagerProps) {
   const [links, setLinks] = useState<Link[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const authHeaders = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+
   const fetchLinks = async () => {
     setLoading(true);
-    const res = await fetch("/api/links");
-    const data = await res.json();
-    setLinks(data);
+    const res = await fetch("/api/links", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setLinks(data);
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     fetchLinks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDeactivate = async (id: string) => {
-    await fetch(`/api/links?id=${id}`, { method: "DELETE" });
+    await fetch(`/api/links?id=${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
     fetchLinks();
   };
 
