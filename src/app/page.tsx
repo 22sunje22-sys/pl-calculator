@@ -1,17 +1,34 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useCallback } from "react";
 import Calculator from "@/components/Calculator";
 import CreateLinkModal from "@/components/CreateLinkModal";
 import LinkManager from "@/components/LinkManager";
+import AdminGate from "@/components/AdminGate";
 
 export default function AdminPage() {
+  const [adminEmail, setAdminEmail] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [events, setEvents] = useState(16);
   const [tickets, setTickets] = useState(2500);
   const [price, setPrice] = useState(250);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [activeTab, setActiveTab] = useState<"calculator" | "links">("calculator");
+  const [activeTab, setActiveTab] = useState<"calculator" | "links">(
+    "calculator"
+  );
+
+  const handleAuth = useCallback((email: string) => {
+    setAdminEmail(email);
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("pl_admin");
+    setAdminEmail(null);
+  };
+
+  if (!adminEmail) {
+    return <AdminGate onAuthenticated={handleAuth} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0e1a]">
@@ -57,6 +74,17 @@ export default function AdminPage() {
                 Generate Client Link
               </button>
             )}
+            <div className="flex items-center gap-2 ml-2 pl-2 border-l border-[#1e293b]">
+              <span className="text-xs text-gray-500 hidden sm:inline">
+                {adminEmail}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="text-xs text-gray-400 hover:text-red-400 transition px-2 py-1 rounded border border-[#1e293b] hover:border-red-900/50"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -75,7 +103,8 @@ export default function AdminPage() {
         ) : (
           <div className="bg-[#111827] rounded-xl border border-[#1e293b] p-6">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <span className="text-indigo-400">🔗</span> Shared Client Links
+              <span className="text-indigo-400">&#128279;</span> Shared Client
+              Links
             </h3>
             <LinkManager key={refreshKey} />
           </div>
