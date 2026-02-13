@@ -3,6 +3,7 @@ export const ADMIN_EMAILS = [
   "paul.joseph@platinumlist.net",
   "alex.yutkin@platinumlist.net",
   "ahmed.rayan@platinumlist.net",
+  "aleksandr.sapygin@platinumlist.net",
   "22sunje22@gmail.com", // dev/owner
 ];
 
